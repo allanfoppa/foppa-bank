@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 import {
   AccountAlreadyExistsException,
   DomainValidationException,
-} from '../../domain/account/account.domain-exception';
+} from '../../../../../domain/account/account.domain-exception';
 
 @Catch(Error)
 export class DomainExceptionFilter implements ExceptionFilter<Error> {
