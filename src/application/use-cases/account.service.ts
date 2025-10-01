@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { AccountAlreadyExistsException } from '../../domain/account/account.domain-exception';
+import { AccountDomainException } from '../../domain/account/account.domain-exception';
 import { AccountDomainEntity } from '../../domain/account/account.domain-entity';
 import type { AccountRepository } from '../port/out/account.repository';
 import type { NotificationService } from '../port/out/notification.service';
@@ -17,7 +17,8 @@ export class AccountService implements CreateAccountUseCase {
 
   async execute(command: CreateAccountCommand): Promise<CreateAccountResult> {
     const exists = await this.repo.findByEmail(command.email);
-    if (exists) throw new AccountAlreadyExistsException(command.email);
+    if (exists)
+      throw AccountDomainException.accountAlreadyExists(command.email);
 
     const account = AccountDomainEntity.create({
       id: randomUUID(),
@@ -32,6 +33,6 @@ export class AccountService implements CreateAccountUseCase {
       email: command.email,
     });
 
-    return account.toDTO();
+    return account.getToDTO;
   }
 }

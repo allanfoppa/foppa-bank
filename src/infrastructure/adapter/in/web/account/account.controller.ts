@@ -5,11 +5,15 @@ import {
   HttpStatus,
   Inject,
   Post,
+  UseFilters,
 } from '@nestjs/common';
 import { CREATE_ACCOUNT_USE_CASE } from '../../../../../application/port/out/tokens';
 import type { CreateAccountUseCase } from '../../../../../application/port/in/create-account.use-case';
 import type { CreateAccountDto } from './dto/create-account.dto';
+import { AccountDomainExceptionFilter } from '../../../../../infrastructure/framework/nest/common/filters/account-domain-exception.filter';
+import { AccountDomainSuccess } from 'src/domain/account/account.domain-success';
 
+@UseFilters(AccountDomainExceptionFilter)
 @Controller('accounts')
 export class AccountController {
   constructor(
@@ -20,7 +24,7 @@ export class AccountController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() body: CreateAccountDto) {
-    const result = await this.createAccount.execute(body);
-    return { message: 'Account created', data: result };
+    const account = await this.createAccount.execute(body);
+    return AccountDomainSuccess.accountCreated(account.email, account);
   }
 }

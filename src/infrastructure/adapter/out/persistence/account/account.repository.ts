@@ -11,7 +11,7 @@ export class InMemoryAccountRepository implements AccountRepository {
   }
 
   save(account: AccountDomainEntity): Promise<void> {
-    this.byEmail.set(account.getEmail().toLowerCase(), account);
+    this.byEmail.set(account.getEmail.toLowerCase(), account);
     return Promise.resolve();
   }
 }
