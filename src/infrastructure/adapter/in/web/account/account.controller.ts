@@ -10,7 +10,7 @@ import {
 import { CREATE_ACCOUNT_USE_CASE } from '../../../../../application/port/out/tokens';
 import type { CreateAccountUseCase } from '../../../../../application/port/in/create-account.use-case';
 import type { CreateAccountDto } from './dto/create-account.dto';
-import { AccountDomainExceptionFilter } from '../../../../../infrastructure/framework/nest/common/filters/account-domain-exception.filter';
+import { AccountDomainExceptionFilter } from '../../../../api/nest/common/filters/account-domain-exception.filter';
 import { AccountDomainSuccess } from 'src/domain/account/account.domain-success';
 
 @UseFilters(AccountDomainExceptionFilter)
