@@ -1,4 +1,4 @@
-import { AppCode } from './app-code';
+import { AppCode } from './app.codes';
 
 /**
  * A map of error codes to their corresponding ErrorCode instances.
@@ -13,4 +13,5 @@ export const ErrorCodes: Record<string, AppCode> = {
   E002: new AppCode('E002', 'Name is required'),
   E003: new AppCode('E003', 'Valid email is required'),
   E004: new AppCode('E004', 'Initial deposit cannot be negative'),
+  E005: new AppCode('E005', 'Account not found for email: %s'),
 };

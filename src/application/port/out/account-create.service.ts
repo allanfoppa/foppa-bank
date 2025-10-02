@@ -1,15 +1,15 @@
 import { randomUUID } from 'crypto';
-import { AccountDomainException } from '../../domain/account/account.domain-exception';
-import { AccountDomainEntity } from '../../domain/account/account.domain-entity';
-import type { AccountRepository } from '../port/out/account.repository';
-import type { NotificationService } from '../port/out/notification.service';
+import { AccountDomainException } from '../../../domain/features/account/account.domain-exception';
+import { AccountDomainEntity } from '../../../domain/features/account/account.domain-entity';
+import type { AccountRepository } from '../../port/out/account.repository';
+import type { NotificationService } from '../../port/out/notification.service';
 import type {
   CreateAccountCommand,
   CreateAccountResult,
   CreateAccountUseCase,
-} from '../port/in/create-account.use-case';
+} from '../../port/in/create-account.use-case';
 
-export class AccountService implements CreateAccountUseCase {
+export class CreateAccountService implements CreateAccountUseCase {
   constructor(
     private readonly repo: AccountRepository,
     private readonly notifier: NotificationService,

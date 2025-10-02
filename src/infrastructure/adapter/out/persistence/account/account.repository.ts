@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AccountRepository } from '../../../../../application/port/out/account.repository';
-import { AccountDomainEntity } from '../../../../../domain/account/account.domain-entity';
+import { AccountDomainEntity } from '../../../../../domain/features/account/account.domain-entity';
 
 @Injectable()
 export class InMemoryAccountRepository implements AccountRepository {

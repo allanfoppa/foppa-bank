@@ -1,4 +1,4 @@
-import { ErrorCodes } from '../codes/error-codes';
+import { ErrorCodes } from '../../codes/errors.codes';
 
 export class AccountDomainException extends Error {
   public readonly internalCode: string;
@@ -7,6 +7,14 @@ export class AccountDomainException extends Error {
     super(message);
     this.name = name;
     this.internalCode = internalCode;
+  }
+
+  static accountAlreadyExists(email: string) {
+    return new AccountDomainException(
+      ErrorCodes.E001.format(email),
+      'AccountAlreadyExistsException',
+      ErrorCodes.E001.internalCode,
+    );
   }
 
   static nameRequired() {
@@ -33,11 +41,11 @@ export class AccountDomainException extends Error {
     );
   }
 
-  static accountAlreadyExists(email: string) {
+  static accountNotFound(email: string) {
     return new AccountDomainException(
-      ErrorCodes.E001.format(email),
-      'AccountAlreadyExistsException',
-      ErrorCodes.E001.internalCode,
+      ErrorCodes.E005.format(email),
+      'AccountNotFound',
+      ErrorCodes.E005.internalCode,
     );
   }
 }

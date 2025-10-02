@@ -1,4 +1,4 @@
-import { SuccessCodes } from '../codes/success-codes';
+import { SuccessCodes } from '../../codes/success.codes';
 
 export class AccountDomainSuccess {
   public readonly internalCode: string;
@@ -20,9 +20,18 @@ export class AccountDomainSuccess {
 
   static accountCreated(email: string, data: unknown) {
     return new AccountDomainSuccess(
-      SuccessCodes.E001.internalCode,
-      SuccessCodes.E001.format(email),
+      SuccessCodes.S001.internalCode,
+      SuccessCodes.S001.format(email),
       'AccountCreatedWithSuccess',
+      data,
+    );
+  }
+
+  static accountFound(data: unknown) {
+    return new AccountDomainSuccess(
+      SuccessCodes.S002.internalCode,
+      SuccessCodes.S002.format(),
+      'AccountFoundWithSuccess',
       data,
     );
   }

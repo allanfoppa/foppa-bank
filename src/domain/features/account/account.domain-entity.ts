@@ -34,6 +34,23 @@ export class AccountDomainEntity {
     );
   }
 
+  static get(params: { email: string }): AccountDomainEntity {
+    const { email } = params;
+
+    if (!email.trim() || !email.includes('@')) {
+      throw AccountDomainException.validEmailRequired();
+    }
+
+    // In a real-world scenario, this method would fetch the account details from a database.
+    // Here, we are simulating the retrieval of an account with a zero balance for demonstration purposes.
+    return new AccountDomainEntity(
+      'existing-id',
+      'Existing User',
+      email.trim().toLowerCase(),
+      0,
+    );
+  }
+
   get getId(): string {
     return this.id;
   }
