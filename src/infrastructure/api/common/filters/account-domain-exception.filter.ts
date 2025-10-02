@@ -5,7 +5,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { AccountDomainException } from '../../../../../domain/account/account.domain-exception';
+import { AccountDomainException } from '../../../../domain/account/account.domain-exception';
 
 @Catch(AccountDomainException)
 export class AccountDomainExceptionFilter
