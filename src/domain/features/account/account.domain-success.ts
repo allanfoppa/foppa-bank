@@ -30,7 +30,7 @@ export class AccountDomainSuccess {
   static accountFound(data: unknown) {
     return new AccountDomainSuccess(
       SuccessCodes.S002.internalCode,
-      SuccessCodes.S002.format(),
+      SuccessCodes.S002.message,
       'AccountFoundWithSuccess',
       data,
     );
