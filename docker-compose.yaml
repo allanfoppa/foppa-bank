@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Data Layer
+  database:
+    image: postgres:15-alpine
+    container_name: foppa-bank-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: foppa_bank
+    ports:
+      - "5432:5432"
+    networks:
+      - foppa-network
+
+  # Backend API
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    container_name: foppa-bank-api
+    environment:
+      - DATABASE_URL=postgresql://user:password@database:5432/foppa_bank
+      - WORKERS_URL=http://workers:3001 # Internal URL
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
+  # The Scrapers (Workers)
+  workers:
+    build:
+      context: .
+      dockerfile: ./apps/workers/Dockerfile
+    container_name: foppa-bank-workers
+    environment:
+      - DATABASE_URL=postgresql://user:password@database:5432/foppa_bank
+    expose:
+      - "3001" # Only visible to other containers in the network
+    depends_on:
+      - database
+
+  # Frontend
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    container_name: foppa-bank-web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - foppa-network
+
+networks:
+  foppa-network:
+    driver: bridge

@@ -1,0 +1,42 @@
+flowchart TD
+    %% External Driving Layer
+    subgraph ExternalWorld["External World (HTTP, CLI, Events)"]
+        A["HTTP Request"] --> B["AccountController"]
+    end
+
+    %% Adapter In
+    subgraph AdaptersIn["Adapter In (Driving Adapters)"]
+        B[AccountController] --> C[AccountService]
+    end
+
+    %% Application Layer
+    subgraph Application["Application Layer"]
+        C[AccountService] --> D[AccountRepository]
+        C --> E[NotificationService]
+    end
+
+    %% Adapter Out
+    subgraph AdaptersOut["Adapters Out (Driven Adapters)"]
+        D --> F[AccountAdaptersOutInMemoryRepository]
+        D --> G[AccountAdaptersOutPostgresRepository]
+        E --> H[EmailNotificationAdaptersOutService]
+    end
+
+    %% Domain Layer
+    subgraph Domain["Domain Layer"]
+        F -.-> I[AccountDomainEntity]
+        H -.-> I[AccountDomainEntity]
+    end
+
+    %% Styling
+    classDef external fill:#000,stroke:#1f78b4,stroke-width:2px;
+    classDef adapterIn fill:#000,stroke:#f39c12,stroke-width:2px;
+    classDef application fill:#000,stroke:#27ae60,stroke-width:2px;
+    classDef adapterOut fill:#000,stroke:#c0392b,stroke-width:2px;
+    classDef domain fill:#000,stroke:#8e44ad,stroke-width:2px;
+
+    class ExternalWorld external;
+    class AdaptersIn adapterIn;
+    class Application application;
+    class AdaptersOut adapterOut;
+    class Domain domain;
