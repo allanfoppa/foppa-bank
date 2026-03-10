@@ -45,7 +45,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./apps/web/Dockerfile
+      dockerfile: ./apps/web/DockerfileS
     container_name: foppa-bank-web
     ports:
       - "3000:3000"

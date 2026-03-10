@@ -1,0 +1,24 @@
+{
+  "name": "foppa-bank",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:api": "pnpm --filter @foppa-bank/api dev",
+    "dev:web": "pnpm --filter @foppa-bank/web dev",
+    "dev:workers": "pnpm --filter @foppa-bank/workers dev",
+    "db:generate": "pnpm --filter @foppa-bank/database run generate",
+    "db:push": "pnpm --filter @foppa-bank/database run db:push",
+    "db:studio": "pnpm --filter @foppa-bank/database run studio",
+    "maintenance:clean": "pnpm -r exec rm -rf node_modules dist .turbo",
+    "maintenance:setup": "pnpm install && pnpm db:generate",
+    "maintenance:setup:env": "cp .env.example .env && cp .env.example apps/api/.env && cp .env.example apps/web/.env",
+    "build": "pnpm -r run build",
+    "start": "pnpm -r run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.2"
+}

@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-action {
+    @apply p-4 rounded-2xl text-white font-bold flex flex-col items-center justify-center gap-2 hover:scale-105 transition-transform shadow-md;
+  }
+}

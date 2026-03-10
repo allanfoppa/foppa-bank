@@ -1,4 +1,4 @@
 # pnpm-workspace.yaml
 packages:
-  - "apps/*"
-  - "packages/*"
+  - "apps/*" # api, web, workers
+  - "packages/*" # types, database
