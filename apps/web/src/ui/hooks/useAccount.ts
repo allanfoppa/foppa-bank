@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
-import { useDependencies } from '../contexts/DependenciesContext';
-import { Account } from '../../core/domain/entities/Account';
+import { useState, useCallback, useEffect } from "react";
+import { useDependencies } from "../contexts/DependenciesContext";
+import { Account } from "../../core/domain/entities/Account.js";
 
 export const useAccount = (accountId: string) => {
   const { accountRepo } = useDependencies();

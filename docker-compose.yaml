@@ -32,7 +32,7 @@ services:
   workers:
     build:
       context: .
-      dockerfile: ./apps/workers/Dockerfile
+      dockerfile: ./packages/workers/Dockerfile
     container_name: foppa-bank-workers
     environment:
       - DATABASE_URL=postgresql://user:password@database:5432/foppa_bank

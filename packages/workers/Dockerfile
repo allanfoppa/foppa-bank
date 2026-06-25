@@ -1,4 +1,4 @@
-# apps/workers/Dockerfile
+# packages/workers/Dockerfile
 FROM node:24-slim
 
 # Install system dependencies for headless browsers
@@ -13,10 +13,10 @@ WORKDIR /app
 # Copy the shared package and the worker code
 COPY package.json ./
 COPY packages/database ./packages/database
-COPY apps/workers ./apps/workers
+COPY packages/workers ./packages/workers
 
 # Install dependencies (using workspaces)
 RUN pnpm install
 
 # Command to run the worker
-CMD ["npm", "run", "start", "--workspace=apps/workers"]
+CMD ["npm", "run", "start", "--workspace=@foppa-bank/workers"]

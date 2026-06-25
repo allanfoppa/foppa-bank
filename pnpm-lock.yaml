@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.19.15
+        version: 22.19.15
 
   apps/api:
     dependencies:
@@ -169,6 +173,12 @@ importers:
   packages/database: {}
 
   packages/types: {}
+
+  packages/workers:
+    dependencies:
+      '@foppa-bank/database':
+        specifier: workspace:*
+        version: link:../database
 
 packages:
 
