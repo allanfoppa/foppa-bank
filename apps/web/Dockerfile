@@ -1,41 +1,25 @@
-# Stage 1: Build
-FROM node:24-slim AS builder
+# syntax=docker/dockerfile:1
+FROM node:22-slim AS build
 
-# Set the working directory to the root of the monorepo
 WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
 
-# Enable pnpm via Corepack
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# Copy monorepo configuration files
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
-
-# Copy the specific app and shared packages needed
-COPY apps/web/package.json ./apps/web/
-COPY packages/types/package.json ./packages/types/
-
-# Install dependencies for the entire workspace
+# Copy workspace manifests first so dependency installation remains cached when
+# application source files change.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/database/package.json ./packages/database/package.json
+COPY packages/types/package.json ./packages/types/package.json
+COPY packages/workers/package.json ./packages/workers/package.json
 RUN pnpm install --frozen-lockfile
 
-# Copy the source code for the frontend and shared types
 COPY apps/web ./apps/web
 COPY packages/types ./packages/types
+RUN pnpm --filter hexagonal-react build
 
-# Change to the web app directory and build
-WORKDIR /app/apps/web
-# Using pnpm to run your build script (standard React build)
-RUN pnpm build
-
-# Stage 2: Production (Serve with Nginx)
-FROM nginx:alpine AS production
-
-# Copy the build artifacts from the builder stage
-# Adjust 'dist' to 'build' if your bundler output differs
-COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
-
-# Add custom Nginx config to support SPA routing (Hexagonal UI)
+FROM nginx:1.27-alpine AS production
 COPY apps/web/nginx.conf /etc/nginx/conf.d/default.conf
-
+COPY --from=build /app/apps/web/dist /usr/share/nginx/html
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]

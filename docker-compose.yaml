@@ -1,58 +1,71 @@
-version: '3.8'
-
 services:
-  # Data Layer
   database:
     image: postgres:15-alpine
-    container_name: foppa-bank-db
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: foppa_bank
+      POSTGRES_USER: ${POSTGRES_USER:-foppa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-foppa_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-foppa_bank}
     ports:
-      - "5432:5432"
-    networks:
-      - foppa-network
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks: [foppa-network]
 
-  # Backend API
   api:
     build:
       context: .
-      dockerfile: ./apps/api/Dockerfile
-    container_name: foppa-bank-api
+      dockerfile: apps/api/Dockerfile
     environment:
-      - DATABASE_URL=postgresql://user:password@database:5432/foppa_bank
-      - WORKERS_URL=http://workers:3001 # Internal URL
+      NODE_ENV: production
+      PORT: 8080
+      DATABASE_URL: postgresql://${POSTGRES_USER:-foppa}:${POSTGRES_PASSWORD:-foppa_dev_password}@database:5432/${POSTGRES_DB:-foppa_bank}
+      WORKERS_URL: http://workers:3001
     ports:
-      - "8080:8080"
+      - "${API_PORT:-8080}:8080"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [foppa-network]
 
-  # The Scrapers (Workers)
+  # The worker package currently has no start script or implementation. Keep
+  # it opt-in until one is added, rather than making the default stack fail.
   workers:
+    profiles: [workers]
     build:
       context: .
-      dockerfile: ./packages/workers/Dockerfile
-    container_name: foppa-bank-workers
+      dockerfile: packages/workers/Dockerfile
     environment:
-      - DATABASE_URL=postgresql://user:password@database:5432/foppa_bank
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-foppa}:${POSTGRES_PASSWORD:-foppa_dev_password}@database:5432/${POSTGRES_DB:-foppa_bank}
     expose:
-      - "3001" # Only visible to other containers in the network
+      - "3001"
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [foppa-network]
 
-  # Frontend
   web:
     build:
       context: .
-      dockerfile: ./apps/web/DockerfileS
-    container_name: foppa-bank-web
+      dockerfile: apps/web/Dockerfile
     ports:
-      - "3000:3000"
+      - "${WEB_PORT:-3000}:80"
     depends_on:
-      - api
-    networks:
-      - foppa-network
+      api:
+        condition: service_started
+    restart: unless-stopped
+    networks: [foppa-network]
+
+volumes:
+  postgres-data:
 
 networks:
   foppa-network:

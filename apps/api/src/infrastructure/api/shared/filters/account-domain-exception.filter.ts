@@ -17,6 +17,7 @@ export class AccountDomainExceptionFilter
     const request = ctx.getRequest<Request>();
 
     const statusMap: Record<string, number> = {
+      MetadataNotFoundException: HttpStatus.NOT_FOUND,
       NameRequiredValidationException: HttpStatus.BAD_REQUEST,
       ValidEmailRequiredValidationException: HttpStatus.BAD_REQUEST,
       InitialDepositCannotBeNegativeValidationException: HttpStatus.BAD_REQUEST,

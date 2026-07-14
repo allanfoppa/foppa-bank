@@ -9,6 +9,9 @@ import { AppCode } from './app.codes';
  * const msg = SuccessCodes.E001.format('allan@example.com.br');
  */
 export const SuccessCodes: Record<string, AppCode> = {
+  // Account related success codes
   S001: new AppCode('S001', 'Account created successfully for email: %s'),
   S002: new AppCode('S002', 'Account found successfully.'),
+  // Metadata related success codes
+  S003: new AppCode('S003', 'Metadata retrieved successfully.'),
 };
